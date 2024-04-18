@@ -7,7 +7,7 @@ abstract class Failure {
 }
 
 class OtherFailure extends Failure {
-  OtherFailure(String message) : super(message);
+  OtherFailure(super.message);
 }
 
 class DioFailure extends Failure {

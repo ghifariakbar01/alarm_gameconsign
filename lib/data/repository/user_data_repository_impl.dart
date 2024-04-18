@@ -1,7 +1,7 @@
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 import 'package:accurative/data/model/user_model.dart';
+import 'package:fpdart/fpdart.dart';
 
 import '../../core/failure.dart';
 import '../../domain/repository/user_repository.dart';

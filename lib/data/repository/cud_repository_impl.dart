@@ -1,5 +1,5 @@
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:fpdart/fpdart.dart';
 
 import '../../core/failure.dart';
 import '../../domain/repository/cud_repository.dart';

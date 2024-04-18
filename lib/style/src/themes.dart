@@ -1,4 +1,4 @@
-part of style;
+part of '../style.dart';
 
 mixin Themes {
   static TextStyle font(
@@ -7,7 +7,7 @@ mixin Themes {
     FontWeight? fontWeight,
     TextDecoration? decoration,
   }) {
-    return GoogleFonts.poppins(
+    return TextStyle(
       color: color,
       fontSize: fontSize,
       decoration: decoration,

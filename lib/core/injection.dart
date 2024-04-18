@@ -27,7 +27,7 @@ void init() {
     ..registerLazySingleton(() => UserBloc(sl()))
     ..registerLazySingleton<UserDataSource>(() => UserDataSourceImpl())
     ..registerLazySingleton<UserRepository>(() => UserDataRepositoryImpl(sl()))
-    //* CRUD
+    //* CUD
     ..registerLazySingleton<CudDataSource>(() => CudDataSourceImpl())
     ..registerLazySingleton<CudRepository>(() => CudRepositoryImpl(sl()))
     ..registerLazySingleton(() => CudUserBloc(sl()))
