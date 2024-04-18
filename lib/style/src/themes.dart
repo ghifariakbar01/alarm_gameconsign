@@ -8,39 +8,53 @@ mixin Themes {
     TextDecoration? decoration,
   }) {
     return TextStyle(
-      color: color,
       fontSize: fontSize,
       decoration: decoration,
+      color: color ?? Colors.black,
       fontWeight: fontWeight ?? FontWeight.normal,
     );
   }
 
-  static OutlineInputBorder notFocused({Color? color}) {
-    return OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        borderSide: BorderSide(color: color ?? Palette.grey));
+  static IconThemeData iconColor({Color? color}) {
+    return IconThemeData(color: color ?? Colors.black);
   }
 
-  static OutlineInputBorder focused({Color? color}) {
-    return OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        borderSide: BorderSide(color: color ?? Palette.primaryColor));
+  static OutlineInputBorder notFocused() {
+    return const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        borderSide: BorderSide(color: Palette.outlineColor));
   }
 
-  static InputDecoration formStyle(String hintText, {Widget? icon}) {
+  static OutlineInputBorder focused() {
+    return const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        borderSide: BorderSide(color: Palette.primaryColor));
+  }
+
+  static OutlineInputBorder error() {
+    return const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        borderSide: BorderSide(color: Palette.errorColor));
+  }
+
+  static InputDecoration formStyle(String hintText,
+      {Widget? icon, Color? textColor}) {
     return InputDecoration(
       hintText: hintText,
       suffixIcon: icon,
       border: InputBorder.none,
-      focusedBorder: InputBorder.none,
+      focusedBorder: Themes.focused(),
       enabledBorder: Themes.notFocused(),
+      errorBorder: Themes.error(),
       contentPadding: const EdgeInsets.all(16),
       hintStyle: Themes.font(
         14,
+        color: textColor ?? Colors.black,
         fontWeight: FontWeight.normal,
       ),
       labelStyle: Themes.font(
         14,
+        color: textColor ?? Colors.black,
         fontWeight: FontWeight.normal,
       ),
     );

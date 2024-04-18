@@ -4,16 +4,13 @@ import 'package:flutter/material.dart';
 
 import 'package:accurative/core/injection.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/route_manager.dart';
 
-import 'core/injection.dart';
 import 'core/navigation.dart';
 
-import 'presentation/bloc/cud_user/cud_user_bloc.dart';
-import 'presentation/bloc/user/user_bloc.dart';
-import 'presentation/cubit/filter_cubit.dart';
+import 'core/providers.dart';
+import 'core/routes.dart';
 import 'presentation/page/home_page.dart';
-
-final pageRoutes = di.sl<PageRoutes>();
 
 void main() {
   runZonedGuarded(() async {
@@ -42,21 +39,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider<FilterCubit>(
-          create: (BuildContext context) => FilterCubit(),
-        ),
-        BlocProvider<CudUserBloc>(
-          create: (BuildContext context) => CudUserBloc(sl()),
-        ),
-        BlocProvider<UserBloc>(
-          create: (BuildContext context) => userSl..add(GetUser()),
-        ),
-      ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        onGenerateRoute: pageRoutes.onGenerateRoute,
+      providers: Providers(context).providers,
+      child: GetMaterialApp(
+        initialRoute: Routes.homePage,
+        unknownRoute: PageRoutes.unknownPage(),
+        getPages: PageRoutes.pages(),
         home: const HomePage(),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

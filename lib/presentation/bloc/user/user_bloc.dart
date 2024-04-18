@@ -46,7 +46,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       orElse: () {},
       data: (val) {
         final filtered = val
-            .where((user) => user.name.toLowerCase().contains(event.nama))
+            .where((user) =>
+                user.name.toLowerCase().contains(event.nama.toLowerCase()))
             .toList();
 
         emit(UserState.data(filtered));

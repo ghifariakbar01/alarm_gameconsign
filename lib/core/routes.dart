@@ -1,4 +1,5 @@
 class Routes {
-  static const String splash = '/';
-  static const String homePage = '/home';
+  static const String homePage = '/';
+  static const String insertPage = '/insert';
+  static const String unknownPage = '/unknown';
 }

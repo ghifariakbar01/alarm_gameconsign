@@ -6,11 +6,11 @@ class BaseShimmerWidget extends StatelessWidget {
   final bool forceWrap;
   final double radius;
   const BaseShimmerWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.forceWrap = false,
     this.radius = 4,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

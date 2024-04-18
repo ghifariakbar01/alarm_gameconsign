@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../data/model/user_model.dart';
 import '../../style/style.dart';
+import 'common_widget.dart';
 
 class UserListWidget extends StatelessWidget {
   final List<UserModel> data;
-  const UserListWidget({Key? key, required this.data}) : super(key: key);
+  const UserListWidget({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +14,11 @@ class UserListWidget extends StatelessWidget {
       physics: const AlwaysScrollableScrollPhysics(),
       itemCount: data.length,
       itemBuilder: (context, index) => Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(8.0),
         child: Ink(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.amber,
+            border: Border.all(color: Palette.outlineColor),
             borderRadius: BorderRadius.circular(12),
           ),
           child: InkWell(
@@ -33,15 +34,22 @@ class UserListWidget extends StatelessWidget {
                     ),
                     Text('Dari : ${data[index].city}',
                         style: Themes.font(12, fontWeight: FontWeight.w800)),
+                    smallSpace(),
                     Text('HP : ${data[index].phoneNumber}',
-                        style: Themes.font(11)),
+                        style: Themes.font(11, fontWeight: FontWeight.w500)),
                     Text('Alamat : ${data[index].address}',
-                        style: Themes.font(11)),
+                        style: Themes.font(11, fontWeight: FontWeight.w500)),
                   ],
                 ),
 
                 //
-                const Positioned(top: 0, right: 0, child: Icon(Icons.person))
+                const Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.black,
+                    ))
               ],
             ),
           ),

@@ -1,41 +1,26 @@
-import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 
 import '../presentation/page/home_page.dart';
+import '../presentation/page/insert_page.dart';
+import '../presentation/page/unknown_page.dart';
 import 'routes.dart';
 
 class PageRoutes {
   PageRoutes();
-  Route<dynamic> onGenerateRoute(RouteSettings routeSettings) {
-    return MaterialPageRoute(
-      settings: routeSettings,
-      builder: (_) => _getPageRoute(routeSettings),
-    );
-  }
 
-  Widget _getPageRoute(RouteSettings routeSettings) {
-    try {
-      switch (routeSettings.name) {
-        case Routes.homePage:
-          return const HomePage();
-        default:
-          return _UnderMaintanancePage(
-              message: 'No route defined for ${routeSettings.name}');
-      }
-    } on Error catch (e) {
-      return _UnderMaintanancePage(message: e);
-    } catch (e) {
-      return _UnderMaintanancePage(message: e);
-    }
-  }
-}
+  static GetPage unknownPage() => GetPage(
+        name: Routes.unknownPage,
+        page: () => const UnknownPage(),
+      );
 
-class _UnderMaintanancePage extends StatelessWidget {
-  final dynamic message;
-  const _UnderMaintanancePage({Key? key, required this.message})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Page tidak dapat ditemukan : $message"));
-  }
+  static List<GetPage> pages() => [
+        GetPage(
+          name: Routes.homePage,
+          page: () => const HomePage(),
+        ),
+        GetPage(
+          name: Routes.insertPage,
+          page: () => const InsertPage(),
+        ),
+      ];
 }

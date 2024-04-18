@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:get/route_manager.dart';
 
 import '../../core/injection.dart';
 import '../../style/style.dart';
 import '../bloc/user/user_bloc.dart';
-import '../widget/filter_bottom_widget.dart';
+import 'filter/filter_bottom_widget.dart';
 
-class HomeAppBar extends HookWidget implements PreferredSizeWidget {
-  const HomeAppBar({super.key});
+class HomeAppBarWidget extends HookWidget implements PreferredSizeWidget {
+  const HomeAppBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +19,13 @@ class HomeAppBar extends HookWidget implements PreferredSizeWidget {
     return AppBar(
       toolbarHeight: 80,
       leadingWidth: isSearching.value ? double.infinity : 100,
-      backgroundColor: Colors.amber,
+      backgroundColor: Palette.secondaryColor,
       title: TextFormField(
         controller: controller,
-        onTap: () => isSearching.value = true,
+        onTap: () {
+          userSl.add(GetUser());
+          isSearching.value = true;
+        },
         onTapOutside: (_) => isSearching.value = false,
         onFieldSubmitted: (value) {
           if (value.isNotEmpty) {
@@ -31,18 +35,17 @@ class HomeAppBar extends HookWidget implements PreferredSizeWidget {
             isSearching.value = false;
           }
         },
-        decoration: Themes.formStyle('Search User'),
+        style: Themes.font(14, color: Colors.white),
+        decoration: Themes.formStyle('Search User', textColor: Colors.white),
       ),
       actions: isSearching.value
           ? []
           : [
               IconButton(
                   onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) => const FilterBottomWidget(),
-                    );
+                    userSl.add(GetUser());
+                    Get.bottomSheet(
+                        isScrollControlled: true, const FilterBottomWidget());
                   },
                   icon: const Icon(Icons.sort)),
               IconButton(
