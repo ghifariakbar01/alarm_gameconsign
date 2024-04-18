@@ -1,7 +1,7 @@
-import 'package:accurative/data/model/user_model.dart';
 import 'package:dio/dio.dart';
 
 import '../../../core/appstring.dart';
+import '../../model/user_model.dart';
 import 'user_data_source.dart';
 
 final dio = Dio();

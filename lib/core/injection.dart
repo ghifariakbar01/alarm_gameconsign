@@ -1,12 +1,12 @@
-import 'package:accurative/data/datasource/cud/cud_data_source.dart';
-import 'package:accurative/data/datasource/cud/cud_data_source_impl.dart';
-import 'package:accurative/data/repository/cud_repository_impl.dart';
-import 'package:accurative/domain/repository/cud_repository.dart';
 import 'package:get_it/get_it.dart';
 
+import '../data/datasource/cud/cud_data_source.dart';
+import '../data/datasource/cud/cud_data_source_impl.dart';
 import '../data/datasource/user/user_data_source.dart';
 import '../data/datasource/user/user_data_source_impl.dart';
+import '../data/repository/cud_repository_impl.dart';
 import '../data/repository/user_data_repository_impl.dart';
+import '../domain/repository/cud_repository.dart';
 import '../domain/repository/user_repository.dart';
 import '../presentation/bloc/cud_user/cud_user_bloc.dart';
 import '../presentation/bloc/user/user_bloc.dart';

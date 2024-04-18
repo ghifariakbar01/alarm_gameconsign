@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 
-import 'package:accurative/data/model/user_model.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../core/failure.dart';
 import '../../domain/repository/user_repository.dart';
 import '../datasource/user/user_data_source.dart';
+import '../model/user_model.dart';
 
 class UserDataRepositoryImpl implements UserRepository {
   final UserDataSource _remoteDataSource;
