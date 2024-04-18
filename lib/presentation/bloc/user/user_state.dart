@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../core/failure.dart';
-import '../../data/model/user_model.dart';
+import '../../../core/failure.dart';
+import '../../../data/model/user_model.dart';
 
 part 'user_state.freezed.dart';
 

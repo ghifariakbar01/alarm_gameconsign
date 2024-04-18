@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../data/model/user_model.dart';
-import '../../domain/repository/user_repository.dart';
+import '../../../data/model/user_model.dart';
+import '../../../domain/repository/user_repository.dart';
 import 'user_state.dart';
 
 part 'user_event.dart';
@@ -43,14 +43,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     Emitter<UserState> emit,
   ) {
     state.maybeWhen(
-        data: (val) {
-          final filtered = val
-              .where((user) => user.name.toLowerCase().contains(event.nama))
-              .toList();
+      orElse: () {},
+      data: (val) {
+        final filtered = val
+            .where((user) => user.name.toLowerCase().contains(event.nama))
+            .toList();
 
-          emit(UserState.data(filtered));
-        },
-        orElse: () {});
+        emit(UserState.data(filtered));
+      },
+    );
   }
 
   void _onSortByName(
@@ -58,23 +59,24 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     Emitter<UserState> emit,
   ) {
     state.maybeWhen(
-        data: (val) {
-          List<UserModel> sortedList = [];
+      orElse: () {},
+      data: (val) {
+        List<UserModel> sortedList = [];
 
-          if (event.isReverse) {
-            sortedList = List.from(val.reversed);
+        if (event.isReverse) {
+          sortedList = List.from(val.reversed);
 
-            emit(UserState.data(sortedList));
-          } else {
-            sortedList = List.from(val)
-              ..sort((a, b) => a.name
-                  .toLowerCase()
-                  .compareTo(b.name.toLowerCase().toString()));
+          emit(UserState.data(sortedList));
+        } else {
+          sortedList = List.from(val)
+            ..sort((a, b) => a.name
+                .toLowerCase()
+                .compareTo(b.name.toLowerCase().toString()));
 
-            emit(UserState.data(sortedList));
-          }
-        },
-        orElse: () {});
+          emit(UserState.data(sortedList));
+        }
+      },
+    );
   }
 
   void _onFilterByCity(

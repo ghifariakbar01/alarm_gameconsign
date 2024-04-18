@@ -5,7 +5,7 @@ import 'package:accurative/data/model/user_model.dart';
 
 import '../../core/failure.dart';
 import '../../domain/repository/user_repository.dart';
-import '../datasource/user_data_source.dart';
+import '../datasource/user/user_data_source.dart';
 
 class UserDataRepositoryImpl implements UserRepository {
   final UserDataSource _remoteDataSource;
@@ -15,7 +15,7 @@ class UserDataRepositoryImpl implements UserRepository {
   @override
   Future<Either<Failure, List<UserModel>>> getUserListRepository() async {
     try {
-      final result = await _remoteDataSource.getUserListDataSource();
+      final result = await _remoteDataSource.getUserList();
       return Right(result);
     } on DioException catch (dioError) {
       return Left(DioFailure(dioError));

@@ -20,6 +20,7 @@ dependencies:
   flutter_hooks: ^0.20.5
 
   #* UI
+  fluttertoast: ^8.2.5
   google_fonts: 6.1.0
   shimmer: ^3.0.0
 

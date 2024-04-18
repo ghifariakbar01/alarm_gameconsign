@@ -1,15 +1,14 @@
 import 'package:accurative/data/model/user_model.dart';
 import 'package:dio/dio.dart';
 
-import '../../core/appstring.dart';
-
+import '../../../core/appstring.dart';
 import 'user_data_source.dart';
 
 final dio = Dio();
 
 class UserDataSourceImpl implements UserDataSource {
   @override
-  Future<List<UserModel>> getUserListDataSource() async {
+  Future<List<UserModel>> getUserList() async {
     final url = AppString.endPointUrl;
     try {
       final response = await dio.get("$url/user");

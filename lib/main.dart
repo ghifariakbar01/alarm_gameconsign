@@ -3,9 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:accurative/core/injection.dart' as di;
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'core/injection.dart';
 import 'core/navigation.dart';
 
+import 'presentation/bloc/cud_user/cud_user_bloc.dart';
+import 'presentation/bloc/user/user_bloc.dart';
+import 'presentation/cubit/filter_cubit.dart';
 import 'presentation/page/home_page.dart';
 
 final pageRoutes = di.sl<PageRoutes>();
@@ -36,10 +41,23 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      onGenerateRoute: pageRoutes.onGenerateRoute,
-      home: const HomePage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<FilterCubit>(
+          create: (BuildContext context) => FilterCubit(),
+        ),
+        BlocProvider<CudUserBloc>(
+          create: (BuildContext context) => CudUserBloc(sl()),
+        ),
+        BlocProvider<UserBloc>(
+          create: (BuildContext context) => userSl..add(GetUser()),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        onGenerateRoute: pageRoutes.onGenerateRoute,
+        home: const HomePage(),
+      ),
     );
   }
 }
