@@ -29,16 +29,14 @@ class UserListWidget extends StatelessWidget {
                   children: [
                     Text(
                       data[index].name,
-                      style:
-                          Themes.customColor(12, fontWeight: FontWeight.w800),
+                      style: Themes.font(12, fontWeight: FontWeight.w800),
                     ),
                     Text('Dari : ${data[index].city}',
-                        style: Themes.customColor(12,
-                            fontWeight: FontWeight.w800)),
+                        style: Themes.font(12, fontWeight: FontWeight.w800)),
                     Text('HP : ${data[index].phoneNumber}',
-                        style: Themes.customColor(11)),
+                        style: Themes.font(11)),
                     Text('Alamat : ${data[index].address}',
-                        style: Themes.customColor(11)),
+                        style: Themes.font(11)),
                   ],
                 ),
 
