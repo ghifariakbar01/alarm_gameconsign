@@ -1,9 +1,14 @@
+import 'package:alarm/presentation/bloc/alarm/alarm_bloc.dart';
+import 'package:alarm/presentation/bloc/alarm/alarm_event.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../presentation/bloc/cud_user/cud_user_bloc.dart';
-import '../presentation/bloc/user/user_bloc.dart';
-import '../presentation/cubit/filter_cubit.dart';
+import '../presentation/bloc/notif/notif_bloc.dart';
+import '../presentation/bloc/notif_setup/notif_setup_bloc.dart';
+
+import '../presentation/bloc/notif_setup/notif_setup_event.dart';
+
 import 'injection.dart';
 
 class Providers {
@@ -14,14 +19,14 @@ class Providers {
   List<BlocProvider> get providers => _providers;
 
   final List<BlocProvider> _providers = [
-    BlocProvider<FilterCubit>(
-      create: (BuildContext context) => FilterCubit(),
+    BlocProvider<NotifBloc>(
+      create: (BuildContext context) => NotifBloc(sl()),
     ),
-    BlocProvider<CudUserBloc>(
-      create: (BuildContext context) => CudUserBloc(sl()),
+    BlocProvider<AlarmBloc>(
+      create: (BuildContext context) => alarmSl..add(GetAlarm()),
     ),
-    BlocProvider<UserBloc>(
-      create: (BuildContext context) => userSl..add(GetUser()),
+    BlocProvider<NotifSetupBloc>(
+      create: (BuildContext context) => notifSetupSl..add(Setup()),
     ),
   ];
 }

@@ -35,4 +35,5 @@ Untuk menjalankan aplikasi lakukan langkah-langkah berikut :
 - GetX sebagai route navigation
 - FlutterSecureStorage sebagai penyimpanan
 - flutter_hooks sebagai state management local (form)
+
 # alarm_gameconsign

@@ -1,3 +1,4 @@
+import 'package:alarm/presentation/page/detail_page.dart';
 import 'package:get/route_manager.dart';
 
 import '../presentation/page/home_page.dart';
@@ -21,6 +22,12 @@ class PageRoutes {
         GetPage(
           name: Routes.insertPage,
           page: () => const InsertPage(),
+        ),
+        GetPage(
+          name: Routes.detailPage,
+          page: () => DetailPage(
+            id: Get.arguments,
+          ),
         ),
       ];
 }

@@ -1,4 +1,4 @@
-package com.example.accurative
+package com.example.alarm
 
 import io.flutter.embedding.android.FlutterActivity
 

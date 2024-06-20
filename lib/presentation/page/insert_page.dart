@@ -1,14 +1,22 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:alarm/presentation/bloc/alarm/alarm_event.dart';
+import 'package:alarm/presentation/bloc/notif/notif_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../core/injection.dart';
-import '../../domain/dto/user_dto.dart';
+import '../../data/model/alarm_model.dart';
 import '../../style/style.dart';
 
-import '../bloc/cud_user/cud_user_bloc.dart';
-import '../bloc/cud_user/cud_user_state.dart';
-import '../bloc/user/user_bloc.dart';
+import '../bloc/cud_alarm/cud_alarm_bloc.dart';
+import '../bloc/cud_alarm/cud_alarm_event.dart';
+import '../bloc/cud_alarm/cud_alarm_state.dart';
+
 import '../widget/common_widget.dart';
 
 class InsertPage extends HookWidget {
@@ -19,137 +27,153 @@ class InsertPage extends HookWidget {
     final formKey = useMemoized(GlobalKey<FormState>.new);
 
     final namaController = useTextEditingController();
-    final adderssController = useTextEditingController();
-    final emailController = useTextEditingController();
-    final phoneController = useTextEditingController();
-    final cityController = useTextEditingController();
+    final dateController = useTextEditingController();
+    final dateTime = useState(DateTime.now());
 
-    return BlocConsumer<CudUserBloc, CudUserState>(
+    return BlocConsumer<CudAlarmBloc, CudAlarmState>(
       bloc: cudSl,
       listener: (_, state) {
         state.maybeWhen(
           orElse: () {},
           success: () => _onSuccess(context),
+          failure: (failure) => _onFailure(
+            context,
+            failure.message,
+          ),
         );
       },
       builder: (_, state) => state.maybeWhen(
-          loading: () => Scaffold(
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                ),
-                body: const Center(
+          loading: () => const Scaffold(
+                body: Center(
                   child: CircularProgressIndicator(),
                 ),
               ),
           failure: (failure) => ErrorWidget(failure),
-          orElse: () => Scaffold(
-                appBar: AppBar(
-                  backgroundColor: Palette.primaryColor,
-                  iconTheme: Themes.iconColor(),
-                  title: Text(
-                    'Post User',
-                    style: Themes.font(14),
-                  ),
-                ),
-                body: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Form(
-                    key: formKey,
-                    child: ListView(
-                      children: [
-                        TextFormField(
-                          keyboardType: TextInputType.name,
-                          controller: namaController,
-                          decoration: Themes.formStyle('Insert Nama'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Nama tidak boleh kosong';
-                            }
-
-                            return null;
-                          },
-                        ),
-                        smallSpace(),
-                        TextFormField(
-                          keyboardType: TextInputType.streetAddress,
-                          controller: adderssController,
-                          decoration: Themes.formStyle('Insert Address'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Alamat tidak boleh kosong';
-                            }
-
-                            return null;
-                          },
-                        ),
-                        smallSpace(),
-                        TextFormField(
-                          controller: emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: Themes.formStyle('Insert Email'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Email tidak boleh kosong';
-                            }
-
-                            return null;
-                          },
-                        ),
-                        smallSpace(),
-                        TextFormField(
-                          controller: phoneController,
-                          keyboardType: TextInputType.number,
-                          decoration: Themes.formStyle('Insert Phone'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'No. HP tidak boleh kosong';
-                            }
-
-                            return null;
-                          },
-                        ),
-                        smallSpace(),
-                        TextFormField(
-                          controller: cityController,
-                          keyboardType: TextInputType.streetAddress,
-                          decoration: Themes.formStyle('Insert Kota'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Kota tidak boleh kosong';
-                            }
-
-                            return null;
-                          },
-                        ),
-                        mediumSpace(),
-                        TextButton(
-                            onPressed: () {
-                              if (formKey.currentState != null) {
-                                if (formKey.currentState!.validate()) {
-                                  final userDTO = UserDTO(
-                                      name: namaController.text,
-                                      address: adderssController.text,
-                                      email: emailController.text,
-                                      phoneNumber: phoneController.text,
-                                      city: cityController.text);
-
-                                  cudSl.add(CreateUser(userDTO: userDTO));
+          orElse: () => KeyboardDismissOnTap(
+                child: SafeArea(
+                  child: Scaffold(
+                    backgroundColor: Colors.black,
+                    appBar: AppBar(
+                      toolbarHeight: 80,
+                      backgroundColor: Colors.black,
+                      title: Text('New Alarm',
+                          style: Themes.font(
+                            25,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.green,
+                          )),
+                    ),
+                    body: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextFormField(
+                              keyboardType: TextInputType.name,
+                              controller: namaController,
+                              decoration: Themes.formStyle('Insert Nama'),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Nama tidak boleh kosong';
                                 }
-                              }
-                            },
-                            child: Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: Palette.primaryColor),
-                              child: Center(
-                                child: Text(
-                                  'Insert',
-                                  style: Themes.font(12),
+
+                                return null;
+                              },
+                            ),
+                            smallSpace(),
+                            Ink(
+                              child: InkWell(
+                                onTap: () async {
+                                  final time = await showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay(
+                                      hour: DateTime.now().hour,
+                                      minute: DateTime.now().minute + 1,
+                                    ),
+                                  );
+
+                                  if (time == null) {
+                                    return;
+                                  }
+
+                                  final d = DateTime.now().copyWith(
+                                    hour: time.hour,
+                                    minute: time.minute,
+                                  );
+
+                                  dateTime.value = d;
+                                  dateController.text =
+                                      DateFormat('HH:mm a').format(d);
+                                },
+                                child: TextFormField(
+                                  enabled: false,
+                                  controller: dateController,
+                                  keyboardType: TextInputType.streetAddress,
+                                  decoration:
+                                      Themes.formStyle('Insert DateTime'),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'DateTime tidak boleh kosong';
+                                    }
+
+                                    return null;
+                                  },
                                 ),
                               ),
-                            ))
-                      ],
+                            ),
+                            Expanded(child: Container()),
+                            TextButton(
+                                onPressed: () {
+                                  if (formKey.currentState != null) {
+                                    if (formKey.currentState!.validate()) {
+                                      final id = const Uuid().v1();
+
+                                      final alarm = AlarmModel(
+                                        id: id,
+                                        nama: namaController.text,
+                                        date: dateTime.value,
+                                      );
+
+                                      cudSl.add(SaveAlarm(alarm));
+                                      notifSl.add(ScheduleNotification(alarm));
+                                    }
+                                  }
+                                },
+                                child: Container(
+                                  height: 65,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                        color: Colors.grey.withOpacity(0.2)),
+                                    color: Colors.black,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Insert',
+                                      style: Themes.font(
+                                        20,
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -158,11 +182,26 @@ class InsertPage extends HookWidget {
   }
 
   _onSuccess(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Sukses Create'),
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Sukses Create',
+          style: Themes.font(
+            15,
+            color: Colors.white,
+          )),
       backgroundColor: Colors.green,
     ));
-    userSl.add(GetUser());
+    alarmSl.add(GetAlarm());
     Navigator.pop(context);
+  }
+
+  _onFailure(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Failed Create : $message',
+          style: Themes.font(
+            15,
+            color: Colors.white,
+          )),
+      backgroundColor: Colors.red,
+    ));
   }
 }

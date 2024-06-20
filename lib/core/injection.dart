@@ -1,36 +1,60 @@
+import 'package:alarm/data/datasource/alarm/alarm_data_source.dart';
+import 'package:alarm/data/datasource/alarm/alarm_data_source_impl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
-import '../data/datasource/cud/cud_data_source.dart';
-import '../data/datasource/cud/cud_data_source_impl.dart';
-import '../data/datasource/user/user_data_source.dart';
-import '../data/datasource/user/user_data_source_impl.dart';
-import '../data/repository/cud_repository_impl.dart';
-import '../data/repository/user_data_repository_impl.dart';
-import '../domain/repository/cud_repository.dart';
-import '../domain/repository/user_repository.dart';
-import '../presentation/bloc/cud_user/cud_user_bloc.dart';
-import '../presentation/bloc/user/user_bloc.dart';
-import '../presentation/cubit/filter_cubit.dart';
+import '../data/repository/alarm_repository_impl.dart';
+
+import '../domain/repository/alarm_repository.dart';
+
+import '../presentation/bloc/alarm/alarm_bloc.dart';
+import '../presentation/bloc/cud_alarm/cud_alarm_bloc.dart';
+
+import '../presentation/bloc/notif/notif_bloc.dart';
+
+import '../presentation/bloc/notif_setup/notif_setup_bloc.dart';
+
 import 'appstring.dart';
 import 'navigation.dart';
 
 final sl = GetIt.instance;
-final userSl = sl<UserBloc>();
-final cudSl = sl<CudUserBloc>();
-final filterSl = sl<FilterCubit>();
+
+/*
+  Notif & Alarm
+*/
+final notifSl = sl<NotifBloc>();
+final alarmSl = sl<AlarmBloc>();
+final cudSl = sl<CudAlarmBloc>();
+/*
+  Storage
+*/
+final storageSl = sl<FlutterSecureStorage>();
+/*
+  Permission
+*/
+final notifSetupSl = sl<NotifSetupBloc>();
 
 void init() {
   sl
     ..registerLazySingleton(() => AppString())
     ..registerLazySingleton(() => PageRoutes())
-    //* User
-    ..registerLazySingleton(() => UserBloc(sl()))
-    ..registerLazySingleton<UserDataSource>(() => UserDataSourceImpl())
-    ..registerLazySingleton<UserRepository>(() => UserDataRepositoryImpl(sl()))
-    //* CUD
-    ..registerLazySingleton<CudDataSource>(() => CudDataSourceImpl())
-    ..registerLazySingleton<CudRepository>(() => CudRepositoryImpl(sl()))
-    ..registerLazySingleton(() => CudUserBloc(sl()))
-    //* Filter
-    ..registerLazySingleton(() => FilterCubit());
+    ..registerLazySingleton<FlutterSecureStorage>(
+        () => const FlutterSecureStorage(
+                aOptions: AndroidOptions(
+              encryptedSharedPreferences: true,
+            )))
+    ..registerLazySingleton<FlutterLocalNotificationsPlugin>(
+        () => FlutterLocalNotificationsPlugin())
+
+    //* Alarm
+    ..registerLazySingleton<AlarmDataSource>(
+        () => AlarmDataSourceImpl(storageSl))
+    ..registerLazySingleton<AlarmRepository>(() => AlarmRepositoryImpl(sl()))
+    ..registerLazySingleton(() => AlarmBloc(sl()))
+    //* CUD Alarm
+    ..registerLazySingleton(() => CudAlarmBloc(sl()))
+    //* Notification
+    ..registerLazySingleton(() => NotifBloc(sl()))
+    ..registerLazySingleton(() => NotifSetupBloc(sl()));
 }

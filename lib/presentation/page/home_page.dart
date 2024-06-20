@@ -1,3 +1,5 @@
+import 'package:alarm/core/injection.dart';
+import 'package:alarm/presentation/bloc/notif_setup/notif_setup_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -6,11 +8,13 @@ import 'package:get/route_manager.dart';
 
 import '../../core/routes.dart';
 import '../../style/style.dart';
-import '../bloc/user/user_bloc.dart';
-import '../bloc/user/user_state.dart';
+import '../bloc/alarm/alarm_bloc.dart';
+import '../bloc/alarm/alarm_state.dart';
+import '../bloc/notif_setup/notif_setup_bloc.dart';
+import '../bloc/notif_setup/notif_setup_state.dart';
 import '../widget/home_appbar_widget.dart';
 import '../widget/list_loading_widget.dart';
-import '../widget/user_list_widget.dart';
+import '../widget/alarm_list_widget.dart';
 
 class HomePage extends HookWidget {
   const HomePage({super.key});
@@ -18,29 +22,86 @@ class HomePage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return KeyboardDismissOnTap(
-      child: Scaffold(
-        appBar: const HomeAppBarWidget(),
-        body: BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) => state.map(
-                data: (value) {
-                  final data = value.user;
-                  if (data.isEmpty) return Container();
-                  return UserListWidget(
-                    data: data,
-                  );
+      child: BlocConsumer<NotifSetupBloc, NotifSetupState>(
+        listener: (context, state) {
+          state.maybeWhen(
+            orElse: () {},
+            success: () => _onSuccess(context),
+          );
+        },
+        builder: (context, state) => Scaffold(
+            backgroundColor: Colors.black,
+            appBar: const HomeAppBarWidget(),
+            body: state.when(
+              success: () => BlocBuilder<AlarmBloc, AlarmState>(
+                builder: (context, stateAlarm) => stateAlarm.map(
+                    data: (value) {
+                      final data = value.data;
+                      if (data.isEmpty) {
+                        return Center(
+                            child: Text(
+                          'Looks like there`s nothing here...',
+                          style: Themes.font(
+                            20,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white,
+                          ),
+                        ));
+                      }
+                      return AlarmListWidget(
+                        data: data,
+                      );
+                    },
+                    loading: (_) => const ListLoadingWidget(),
+                    failure: (value) => ErrorWidget(value.failure.message)),
+              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              failure: (failure) => Center(
+                child: TextButton(
+                  onPressed: () {
+                    notifSetupSl.add(Setup());
+                  },
+                  child: Text(
+                    'Tap to retry notification.',
+                    style: Themes.font(
+                      20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: state.maybeWhen(
+              orElse: () => Container(),
+              success: () => FloatingActionButton(
+                onPressed: () {
+                  Get.toNamed(Routes.insertPage);
                 },
-                loading: (_) => const ListLoadingWidget(),
-                failure: (value) => ErrorWidget(value))),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Get.toNamed(Routes.insertPage);
-          },
-          backgroundColor: Palette.secondaryColor,
-          child: const Icon(
-            Icons.add,
+                backgroundColor: Colors.green,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.black,
+                ),
+              ),
+            )),
+      ),
+    );
+  }
+
+  _onSuccess(BuildContext context) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Notifikasi On',
+          style: Themes.font(
+            15,
             color: Colors.white,
           ),
         ),
+        backgroundColor: Colors.green,
       ),
     );
   }

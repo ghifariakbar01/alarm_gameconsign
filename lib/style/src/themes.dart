@@ -16,7 +16,7 @@ mixin Themes {
   }
 
   static IconThemeData iconColor({Color? color}) {
-    return IconThemeData(color: color ?? Colors.black);
+    return IconThemeData(color: color ?? Colors.white);
   }
 
   static OutlineInputBorder notFocused() {
@@ -28,7 +28,7 @@ mixin Themes {
   static OutlineInputBorder focused() {
     return const OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        borderSide: BorderSide(color: Palette.primaryColor));
+        borderSide: BorderSide(color: Colors.green));
   }
 
   static OutlineInputBorder error() {
@@ -42,21 +42,38 @@ mixin Themes {
     return InputDecoration(
       hintText: hintText,
       suffixIcon: icon,
-      border: InputBorder.none,
       focusedBorder: Themes.focused(),
       enabledBorder: Themes.notFocused(),
       errorBorder: Themes.error(),
       contentPadding: const EdgeInsets.all(16),
       hintStyle: Themes.font(
-        14,
-        color: textColor ?? Colors.black,
+        18,
+        color: textColor ?? Colors.white,
         fontWeight: FontWeight.normal,
       ),
       labelStyle: Themes.font(
-        14,
-        color: textColor ?? Colors.black,
+        18,
+        color: textColor ?? Colors.white,
         fontWeight: FontWeight.normal,
       ),
+    );
+  }
+
+  static ThemeData darkTheme(BuildContext context) {
+    return ThemeData.dark().copyWith(
+      brightness: Brightness.dark,
+      appBarTheme: const AppBarTheme(
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actionsIconTheme: IconThemeData(color: Colors.white),
+      ),
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      scaffoldBackgroundColor: Colors.black,
+      primaryColor: Colors.black,
+      secondaryHeaderColor: Colors.white,
+      unselectedWidgetColor: Colors.white,
+      cardColor: Colors.white.withOpacity(0.05),
+      disabledColor: Colors.white.withOpacity(0.15),
     );
   }
 }
