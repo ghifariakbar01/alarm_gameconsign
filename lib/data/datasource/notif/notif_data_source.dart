@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:get/get.dart';
+import 'package:alarm/core/injection.dart';
+import 'package:alarm/presentation/bloc/notif_setup/notif_setup_event.dart';
 
-import '../../../core/routes.dart';
 import '../../../domain/dto/notif_dto.dart';
 
 class NotifDataSource {
@@ -16,13 +16,15 @@ class NotifDataSource {
         return;
       }
 
-      await Get.toNamed(Routes.detailPage, arguments: payload);
+      notifSetupSl.add(Setup());
     });
   }
 
   void configureDidReceiveLocalNotificationSubject() {
     didReceiveLocalNotificationStream.stream
-        .listen((ReceivedNotificationDto receivedNotificationDto) async {});
+        .listen((ReceivedNotificationDto receivedNotificationDto) async {
+      notifSetupSl.add(Setup());
+    });
   }
 
   listenNotif() {

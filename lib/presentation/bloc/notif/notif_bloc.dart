@@ -34,11 +34,17 @@ class NotifBloc extends Bloc<NotifEvent, NotifState> {
         _tzByDateTime(alarm.date),
         payload: alarm.id,
         const NotificationDetails(
-            android: AndroidNotificationDetails(
-          'alarm_1',
-          'alarm_channel',
-          channelDescription: 'showed scheduled alarm notif',
-        )),
+            android: AndroidNotificationDetails('alarm_1', 'alarm_channel',
+                channelDescription: 'showed scheduled alarm notif',
+                actions: [
+              AndroidNotificationAction(
+                'alarm_1',
+                'Action 3',
+                icon: DrawableResourceAndroidBitmap('app_icon'),
+                showsUserInterface: true,
+                cancelNotification: false,
+              ),
+            ])),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,

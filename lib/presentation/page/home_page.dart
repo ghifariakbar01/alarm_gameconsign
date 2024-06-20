@@ -49,7 +49,7 @@ class HomePage extends HookWidget {
                         ));
                       }
                       return AlarmListWidget(
-                        data: data,
+                        data: [...data.reversed],
                       );
                     },
                     loading: (_) => const ListLoadingWidget(),

@@ -2,9 +2,13 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:alarm/core/failure.dart';
+import 'package:alarm/core/injection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 
+import '../../../core/routes.dart';
 import '../../../data/datasource/notif/notif_data_source.dart';
 import '../../../domain/dto/notif_dto.dart';
 import 'notif_setup_event.dart';
@@ -19,7 +23,7 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   log('notification actionId ${notificationResponse.actionId} with');
   log('payload: ${notificationResponse.payload}');
 
-  if (notificationResponse.input?.isNotEmpty ?? false) {}
+  notifSetupSl.add(Setup());
 }
 
 class NotifSetupBloc extends Bloc<NotifSetupEvent, NotifSetupState> {
@@ -44,6 +48,22 @@ class NotifSetupBloc extends Bloc<NotifSetupEvent, NotifSetupState> {
     emit(const NotifSetupState.loading());
 
     await _configureLocalTimeZone();
+
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        !kIsWeb && Platform.isLinux
+            ? null
+            : await _flutterLocalNotificationsPlugin
+                .getNotificationAppLaunchDetails();
+
+    if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+      final String? payload =
+          notificationAppLaunchDetails!.notificationResponse?.payload;
+
+      if (payload == null) {
+      } else {
+        Get.toNamed(Routes.detailPage, arguments: payload);
+      }
+    }
 
     final notifDataSource = NotifDataSource();
 
@@ -94,8 +114,9 @@ class NotifSetupBloc extends Bloc<NotifSetupEvent, NotifSetupState> {
         ],
       );
 
-      const initializationSettingsAndroid =
-          AndroidInitializationSettings('app_icon');
+      const initializationSettingsAndroid = AndroidInitializationSettings(
+        'app_icon',
+      );
 
       final initializationSettings = InitializationSettings(
         iOS: initializationSettingsDarwin,
@@ -107,17 +128,11 @@ class NotifSetupBloc extends Bloc<NotifSetupEvent, NotifSetupState> {
           initializationSettings,
           onDidReceiveNotificationResponse:
               (NotificationResponse notificationResponse) {
-            switch (notificationResponse.notificationResponseType) {
-              case NotificationResponseType.selectedNotification:
-                notifDataSource.selectNotificationStream
-                    .add(notificationResponse.payload);
-                break;
-              case NotificationResponseType.selectedNotificationAction:
-                if (notificationResponse.actionId == 'alarm_1') {
-                  notifDataSource.selectNotificationStream
-                      .add(notificationResponse.payload);
-                }
-                break;
+            final payload0 = notificationResponse.payload;
+
+            if (payload0 == null) {
+            } else {
+              Get.toNamed(Routes.detailPage, arguments: payload0);
             }
           },
           onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
